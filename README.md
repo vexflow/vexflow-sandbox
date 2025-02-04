@@ -1,15 +1,18 @@
 # VexFlow Sandbox
 
-# Built with 11ty
+The VexFlow 5 sandbox is hosted on GitHub Pages:
 
-This page is built with [11ty](https://www.11ty.dev/).
+https://vexflow.github.io/vexflow-sandbox/
 
-1. We use pnpm (or npm) to install dependencies.
-```
-pnpm install
-```
+The site is built with the [11ty](https://www.11ty.dev/) static site generator.
+
+1. Use pnpm (or npm) to install dependencies.
+    ```
+    pnpm install
+    ```
+    or
+    ```
+    npm install
+    ```
 1. The `src/` folder contains `index.html`, which is interpreted as a [liquid template](https://www.11ty.dev/docs/languages/liquid/).
-You could also use `index.md` instead. This Markdown file will also be interpreted as a liquid template.
 1. Run `pnpm start`
-
-# Hosted on GitHub Pages

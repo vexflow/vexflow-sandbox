@@ -12,11 +12,9 @@
         />
         <style>
             * {
-                margin: 0;
+                margin: 12px;
                 padding: 0;
                 box-sizing: border-box;
-            }
-            .centered {
                 font-family:
                     "Roboto Slab",
                     -apple-system,
@@ -30,29 +28,121 @@
                     "Segoe UI Emoji",
                     "Segoe UI Symbol";
                 background-color: #fcfcfb;
-                color: #666;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                text-align: center;
-                z-index: 0;
+                color: #333;
             }
             .title {
-                position: absolute;
-                font-size: max(8vh, 40px);
-                margin: 45vh 50vw;
-                -webkit-transform: translate(-50%, -50%);
-                -ms-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
-                z-index: 2;
+                font-size: 2.2em;
+                display: flex;
+                justify-content: center;
+            }
+            .versions {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 1.2em;
+            }
+
+            .content {
+                border: 1px solid #aaa;
+                min-height: 600px;
+                width: 80%;
+                background-color: #fefeff;
+                margin: 0 auto; /* This centers the div horizontally if you want */
             }
         </style>
+
+        <style>
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    sans-serif;
+                max-width: 800px;
+                margin: 20px auto;
+                padding: 0 20px;
+            }
+            textarea {
+                width: 100%;
+                height: 200px;
+                font-family: monospace;
+                margin-bottom: 10px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            button {
+                background: #0070f3;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            button:hover {
+                background: #0051a2;
+            }
+            #output {
+                white-space: pre-wrap;
+                font-family: monospace;
+                padding: 10px;
+                background: #f0f0f0;
+                border-radius: 4px;
+                margin-top: 20px;
+            }
+        </style>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.3.3/typescript.min.js"></script>
     </head>
     <body>
-        <div class="centered">
-            <div class="title">VexFlow Sandbox</div>
+        <div class="title">VexFlow Sandbox</div>
+        <div class="versions">
+            <a href="#">v5 (current)</a> | <a href="#">v4</a> |
+            <a href="#">v3</a>
         </div>
+        <div class="content"></div>
+
+        <textarea id="code">
+// Write your TypeScript code here
+const greeting: string = "Hello, TypeScript!";
+console.log(greeting);
+
+// Example: Interface
+interface Person {
+    name: string;
+    age: number;
+}
+
+const person: Person = {
+    name: "John",
+    age: 30
+};
+
+console.log(person);
+        </textarea>
+        <br />
+        <button onclick="runCode()">Run Code</button>
+        Open the console to see the output.
+        <script>
+            function runCode() {
+                const code = document.getElementById("code").value;
+                const output = document.getElementById("output");
+
+                try {
+                    // Compile TypeScript to JavaScript
+                    const result = ts.transpileModule(code, {
+                        compilerOptions: {
+                            target: ts.ScriptTarget.ES2015,
+                            module: ts.ModuleKind.None,
+                        },
+                    });
+
+                    // Run the code directly
+                    eval(result.outputText);
+                } catch (error) {
+                    output.textContent = "Error: " + error.message;
+                }
+            }
+        </script>
     </body>
 </html>
