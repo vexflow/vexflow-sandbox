@@ -16,3 +16,4 @@ The site is built with the [11ty](https://www.11ty.dev/) static site generator.
     ```
 1. The `src/` folder contains `index.html`, which is interpreted as a [liquid template](https://www.11ty.dev/docs/languages/liquid/).
 1. Run `pnpm start`
+1. Navigate to `http://localhost:8080`.

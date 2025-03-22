@@ -3,13 +3,10 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <title>GameLeaf</title>
+        <title>VexFlow Sandbox</title>
         <meta name="description" content="VexFlow Sandbox" />
         <meta name="author" content="Ron B. Yeh" />
-        <link
-            href="https://fonts.googleapis.com/css?family=Roboto+Slab:400"
-            rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400" rel="stylesheet" />
         <style>
             * {
                 margin: 12px;
@@ -91,14 +88,69 @@
                 margin-top: 20px;
             }
         </style>
+        <script>
+            let currentVersion = 5;
 
+            function getQueryParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const version = urlParams.get("ver");
+                if (version) {
+                    currentVersion = parseInt(version);
+                    setVersion(currentVersion);
+                }
+            }
+
+            getQueryParams();
+
+            function setVersion(version) {
+                delete window.Vex;
+                delete window.VexFlow;
+
+                let vfURL = "";
+                switch (version) {
+                    case 5:
+                    default:
+                        console.log("Switched to version 5");
+                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js`;
+                        break;
+                    case 4:
+                        console.log("Switched to version 4");
+                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js`;
+                        break;
+                    case 3:
+                        console.log("Switched to version 3");
+                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js`;
+                        break;
+                }
+                const script = document.createElement("script");
+                script.src = vfURL;
+                script.onload = function () {
+                    // V3 and V4.
+                    if (window.Vex) {
+                        console.log("Vex is:");
+                        console.dir(Vex);
+                        // V4.
+                        if (Vex.BUILD) {
+                            console.log(VexFlow.BUILD);
+                        }
+                    }
+                    // V5 and above.
+                    if (window.VexFlow) {
+                        console.log("VexFlow is:");
+                        console.dir(VexFlow);
+                        console.log(VexFlow.BUILD);
+                    }
+                };
+                document.head.appendChild(script);
+            }
+        </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.3.3/typescript.min.js"></script>
     </head>
     <body>
         <div class="title">VexFlow Sandbox</div>
         <div class="versions">
-            <a href="#">v5 (current)</a> | <a href="#">v4</a> |
-            <a href="#">v3</a>
+            <a href="javascript:setVersion(5)">v5 (current)</a>&nbsp;|&nbsp;<a href="javascript:setVersion(4)">v4</a
+            >&nbsp;|&nbsp;<a href="javascript:setVersion(3)">v3</a>
         </div>
         <div class="content"></div>
 
