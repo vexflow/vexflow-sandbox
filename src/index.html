@@ -42,7 +42,7 @@
             .content {
                 border: 1px solid #aaa;
                 min-height: 600px;
-                width: 80%;
+                width: 100%;
                 background-color: #fefeff;
                 margin: 0 auto; /* This centers the div horizontally if you want */
             }
@@ -54,7 +54,7 @@
                     system-ui,
                     -apple-system,
                     sans-serif;
-                max-width: 800px;
+                max-width: 1000px;
                 margin: 20px auto;
                 padding: 0 20px;
             }
@@ -62,30 +62,29 @@
                 width: 100%;
                 height: 200px;
                 font-family: monospace;
-                margin-bottom: 10px;
-                padding: 10px;
+                margin: 20px 0px;
+                padding: 20px;
                 border: 1px solid #ccc;
-                border-radius: 4px;
             }
             button {
                 background: #0070f3;
                 color: white;
                 border: none;
                 padding: 10px 20px;
-                border-radius: 4px;
+                border-radius: 20px;
                 cursor: pointer;
                 font-size: 16px;
+                width: 160px;
             }
             button:hover {
                 background: #0051a2;
             }
-            #output {
-                white-space: pre-wrap;
-                font-family: monospace;
-                padding: 10px;
-                background: #f0f0f0;
-                border-radius: 4px;
-                margin-top: 20px;
+
+            .selectedVersionHighlight {
+                background: #8050b3;
+                color: white;
+                padding: 14px 20px;
+                border: none;
             }
         </style>
         <script>
@@ -101,6 +100,11 @@
             }
 
             getQueryParams();
+
+            function highlightSelectedVersion(version) {
+                document.querySelector(".selectedVersionHighlight").classList.remove("selectedVersionHighlight");
+                document.querySelector(`#v${version}Link`).classList.add("selectedVersionHighlight");
+            }
 
             function setVersion(version) {
                 delete window.Vex;
@@ -122,6 +126,9 @@
                         vfURL = `https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js`;
                         break;
                 }
+
+                highlightSelectedVersion(version);
+
                 const script = document.createElement("script");
                 script.src = vfURL;
                 script.onload = function () {
@@ -143,58 +150,32 @@
                 };
                 document.head.appendChild(script);
             }
+
+            function runCode() {
+                const code = document.getElementById("code").value;
+                eval(code);
+            }
         </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.3.3/typescript.min.js"></script>
     </head>
     <body>
         <div class="title">VexFlow Sandbox</div>
         <div class="versions">
-            <a href="javascript:setVersion(5)">v5 (current)</a>&nbsp;|&nbsp;<a href="javascript:setVersion(4)">v4</a
-            >&nbsp;|&nbsp;<a href="javascript:setVersion(3)">v3</a>
+            <a id="v5Link" href="javascript:setVersion(5)" class="selectedVersionHighlight">v5</a>
+            |
+            <a id="v4Link" href="javascript:setVersion(4)">v4</a>
+            |
+            <a id="v3Link" href="javascript:setVersion(3)">v3</a>
         </div>
         <div class="content"></div>
-
         <textarea id="code">
-// Write your TypeScript code here
-const greeting: string = "Hello, TypeScript!";
-console.log(greeting);
-
-// Example: Interface
-interface Person {
-    name: string;
-    age: number;
-}
-
-const person: Person = {
-    name: "John",
-    age: 30
-};
-
-console.log(person);
+let x = 5;
+let y = 10;
+console.log(x + y);
         </textarea>
         <br />
         <button onclick="runCode()">Run Code</button>
-        Open the console to see the output.
-        <script>
-            function runCode() {
-                const code = document.getElementById("code").value;
-                const output = document.getElementById("output");
+        <div>Open the console to see the output.</div>
 
-                try {
-                    // Compile TypeScript to JavaScript
-                    const result = ts.transpileModule(code, {
-                        compilerOptions: {
-                            target: ts.ScriptTarget.ES2015,
-                            module: ts.ModuleKind.None,
-                        },
-                    });
-
-                    // Run the code directly
-                    eval(result.outputText);
-                } catch (error) {
-                    output.textContent = "Error: " + error.message;
-                }
-            }
-        </script>
+        {% include 'footer.html' %}
     </body>
 </html>
