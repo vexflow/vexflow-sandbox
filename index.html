@@ -3,20 +3,15 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <title>GameLeaf</title>
+        <title>VexFlow Sandbox</title>
         <meta name="description" content="VexFlow Sandbox" />
         <meta name="author" content="Ron B. Yeh" />
-        <link
-            href="https://fonts.googleapis.com/css?family=Roboto+Slab:400"
-            rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400" rel="stylesheet" />
         <style>
             * {
-                margin: 0;
+                margin: 12px;
                 padding: 0;
                 box-sizing: border-box;
-            }
-            .centered {
                 font-family:
                     "Roboto Slab",
                     -apple-system,
@@ -30,29 +25,160 @@
                     "Segoe UI Emoji",
                     "Segoe UI Symbol";
                 background-color: #fcfcfb;
-                color: #666;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                text-align: center;
-                z-index: 0;
+                color: #333;
             }
             .title {
-                position: absolute;
-                font-size: max(8vh, 40px);
-                margin: 45vh 50vw;
-                -webkit-transform: translate(-50%, -50%);
-                -ms-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
-                z-index: 2;
+                font-size: 2.2em;
+                display: flex;
+                justify-content: center;
+            }
+            .versions {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 1.2em;
+            }
+
+            .content {
+                border: 1px solid #aaa;
+                min-height: 600px;
+                width: 100%;
+                background-color: #fefeff;
+                margin: 0 auto; /* This centers the div horizontally if you want */
             }
         </style>
+
+        <style>
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    sans-serif;
+                max-width: 1000px;
+                margin: 20px auto;
+                padding: 0 20px;
+            }
+            textarea {
+                width: 100%;
+                height: 200px;
+                font-family: monospace;
+                margin: 20px 0px;
+                padding: 20px;
+                border: 1px solid #ccc;
+            }
+            button {
+                background: #0070f3;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 160px;
+            }
+            button:hover {
+                background: #0051a2;
+            }
+
+            .selectedVersionHighlight {
+                background: #8050b3;
+                color: white;
+                padding: 14px 20px;
+                border: none;
+            }
+        </style>
+        <script>
+            let currentVersion = 5;
+
+            function getQueryParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const version = urlParams.get("ver");
+                if (version) {
+                    currentVersion = parseInt(version);
+                    setVersion(currentVersion);
+                }
+            }
+
+            getQueryParams();
+
+            function highlightSelectedVersion(version) {
+                document.querySelector(".selectedVersionHighlight").classList.remove("selectedVersionHighlight");
+                document.querySelector(`#v${version}Link`).classList.add("selectedVersionHighlight");
+            }
+
+            function setVersion(version) {
+                delete window.Vex;
+                delete window.VexFlow;
+
+                let vfURL = "";
+                switch (version) {
+                    case 5:
+                    default:
+                        console.log("Switched to version 5");
+                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js`;
+                        break;
+                    case 4:
+                        console.log("Switched to version 4");
+                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js`;
+                        break;
+                    case 3:
+                        console.log("Switched to version 3");
+                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js`;
+                        break;
+                }
+
+                highlightSelectedVersion(version);
+
+                const script = document.createElement("script");
+                script.src = vfURL;
+                script.onload = function () {
+                    // V3 and V4.
+                    if (window.Vex) {
+                        console.log("Vex is:");
+                        console.dir(Vex);
+                        // V4.
+                        if (Vex.BUILD) {
+                            console.log(VexFlow.BUILD);
+                        }
+                    }
+                    // V5 and above.
+                    if (window.VexFlow) {
+                        console.log("VexFlow is:");
+                        console.dir(VexFlow);
+                        console.log(VexFlow.BUILD);
+                    }
+                };
+                document.head.appendChild(script);
+            }
+
+            function runCode() {
+                const code = document.getElementById("code").value;
+                eval(code);
+            }
+        </script>
     </head>
     <body>
-        <div class="centered">
-            <div class="title">VexFlow Sandbox</div>
+        <div class="title">VexFlow Sandbox</div>
+        <div class="versions">
+            <a id="v5Link" href="javascript:setVersion(5)" class="selectedVersionHighlight">v5</a>
+            |
+            <a id="v4Link" href="javascript:setVersion(4)">v4</a>
+            |
+            <a id="v3Link" href="javascript:setVersion(3)">v3</a>
         </div>
+        <div class="content"></div>
+        <textarea id="code">
+let x = 5;
+let y = 10;
+console.log(x + y);
+        </textarea>
+        <br />
+        <button onclick="runCode()">Run Code</button>
+        <div>Open the console to see the output.</div>
+
+        <div>&nbsp;</div>
+<hr />
+<div style="text-align: right">&copy; 2025 VexFlow</div>
+
     </body>
 </html>
