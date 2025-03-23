@@ -1,32 +1,19 @@
 <!doctype html>
 <html>
     <head>
-        <meta charset="utf-8" />
+        <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
         <title>VexFlow Sandbox</title>
         <meta name="description" content="VexFlow Sandbox" />
         <meta name="author" content="Ron B. Yeh" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400" rel="stylesheet" />
         <link rel="stylesheet" href="/c/prism.css" />
+        <script src="/j/prism.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow.js"></script>
         <style>
             * {
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
-                font-family:
-                    "Roboto Slab",
-                    -apple-system,
-                    BlinkMacSystemFont,
-                    "Segoe UI",
-                    Roboto,
-                    Helvetica,
-                    Arial,
-                    sans-serif,
-                    "Apple Color Emoji",
-                    "Segoe UI Emoji",
-                    "Segoe UI Symbol";
-                background-color: #fcfcfb;
-                color: #333;
             }
             .title {
                 font-size: 2.2em;
@@ -47,16 +34,15 @@
                 background-color: #fefeff;
                 margin: 0 auto;
             }
-        </style>
-        <style>
+
             body {
-                font-family:
-                    system-ui,
-                    -apple-system,
-                    sans-serif;
+                background-color: #fcfcfb;
+                color: #333;
                 max-width: 1000px;
                 margin: 20px auto;
                 padding: 0 20px;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+                    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             }
 
             textarea {
@@ -99,7 +85,37 @@
                 background: #8050b3;
                 color: white;
             }
+
+            pre code[contenteditable="true"] {
+                outline: none;
+            }
         </style>
+    </head>
+    <body>
+        <div class="title">VexFlow Sandbox</div>
+        <div>&nbsp;</div>
+        <div class="versions">
+            <a id="v5Link" href="javascript:setVersion(5)" class="selectedVersionHighlight versionButton">v5</a>
+            &nbsp • &nbsp;
+            <a id="v4Link" href="javascript:setVersion(4)" class="versionButton">v4</a>
+            &nbsp; • &nbsp;
+            <a id="v3Link" href="javascript:setVersion(3)" class="versionButton">v3</a>
+        </div>
+        <div>&nbsp;</div>
+        <div id="output" class="content"></div>
+        <textarea id="code"></textarea>
+        <pre><code id="code2" class="lang-js" contenteditable="true">
+        </code></pre>
+        <br />
+        <div style="text-align: right">
+            <button id="runButton" disabled onclick="runCode()">Run Code</button>
+        </div>
+        <div>&nbsp;</div>
+        <div>&nbsp;</div>
+<hr />
+<div style="text-align: right">&copy; 2025 VexFlow</div>
+
+        <!--  -->
         
 <script>
     const code = {
@@ -174,25 +190,27 @@
             }
 
             function showCode(str) {
+                console.log(document.getElementById("code"));
                 document.getElementById("code").value = str;
+                document.getElementById("code2").innerHTML = str;
             }
 
             function runCode() {
                 clearOutput();
                 const code = document.getElementById("code").value;
-                eval(code);
+                eval('"use strict";' + code);
             }
 
             async function loadVexFlowScriptsInOrder() {
                 try {
-                    await loadScript("https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js");
+                    // await loadScript("https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js");
                     v5VexFlowObject = window.VexFlow;
 
-                    await loadScript("https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js");
-                    v4VexFlowObject = window.Vex;
+                    // await loadScript("https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js");
+                    // v4VexFlowObject = window.Vex;
 
-                    await loadScript("https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js");
-                    v3VexFlowObject = window.Vex;
+                    // await loadScript("https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js");
+                    // v3VexFlowObject = window.Vex;
 
                     // Once all the scripts are loaded, we can check this page's query params.
                     updateSelectedVersionFromQueryParams();
@@ -203,29 +221,5 @@
 
             loadVexFlowScriptsInOrder();
         </script>
-    </head>
-    <body>
-        <div class="title">VexFlow Sandbox</div>
-        <div>&nbsp;</div>
-        <div class="versions">
-            <a id="v5Link" href="javascript:setVersion(5)" class="selectedVersionHighlight versionButton">v5</a>
-            &nbsp • &nbsp;
-            <a id="v4Link" href="javascript:setVersion(4)" class="versionButton">v4</a>
-            &nbsp; • &nbsp;
-            <a id="v3Link" href="javascript:setVersion(3)" class="versionButton">v3</a>
-        </div>
-        <div>&nbsp;</div>
-        <div id="output" class="content"></div>
-        <textarea id="code"></textarea>
-        <br />
-        <div style="text-align: right">
-            <span style="margin-right: 20px">Open the console to see the output.</span
-            ><button id="runButton" disabled onclick="runCode()">Run Code</button>
-        </div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-<hr />
-<div style="text-align: right">&copy; 2025 VexFlow</div>
-
     </body>
 </html>
