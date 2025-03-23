@@ -7,6 +7,7 @@
         <meta name="description" content="VexFlow Sandbox" />
         <meta name="author" content="Ron B. Yeh" />
         <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400" rel="stylesheet" />
+        <link rel="stylesheet" href="/c/prism.css" />
         <style>
             * {
                 margin: 0;
@@ -47,7 +48,6 @@
                 margin: 0 auto;
             }
         </style>
-
         <style>
             body {
                 font-family:
@@ -100,15 +100,16 @@
                 color: white;
             }
         </style>
-        <script>
-            const code = {
-                hello_world: {
-                    v5: `console.log('Hello, World V55!');`,
-                    v4: `console.log('Hello, World V44!');`,
-                    v3: `const { Factory } = Vex.Flow;\n\n// Create a VexFlow renderer attached to the DIV element with id="output".\nconst vf = new Factory({ renderer: { elementId: 'output' } });\nconst score = vf.EasyScore();\nconst system = vf.System();\n\n// Create a 4/4 treble stave and add two parallel voices.\nsystem.addStave({\n  voices: [\n    // Top voice has 4 quarter notes with stems up.\n    score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),\n\n    // Bottom voice has two half notes, with stems down.\n    score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))\n  ]\n}).addClef('treble').addTimeSignature('4/4');\n\n// Draw it!\nvf.draw();`,
-                },
-            };
-        </script>
+        
+<script>
+    const code = {
+        hello_world: {
+            v5: `// VexFlow 5 Hello World\n\nconst { Factory } = VexFlow;\n\n// Create a VexFlow renderer attached to the DIV element with id="output".\nconst vf = new Factory({ renderer: { elementId: 'output' } });\nconst score = vf.EasyScore();\nconst system = vf.System();\n\n// Create a 4/4 treble stave and add two parallel voices.\nsystem.addStave({\n  voices: [\n    // Top voice has 4 quarter notes with stems up.\n    score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),\n\n    // Bottom voice has two half notes, with stems down.\n    score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))\n  ]\n}).addClef('treble').addTimeSignature('4/4');\n\n// Draw it!\nvf.draw();`,
+            v4: `// VexFlow 4.2.6 Hello World\n\nconst { Factory } = Vex.Flow;\n\n// Create a VexFlow renderer attached to the DIV element with id="output".\nconst vf = new Factory({ renderer: { elementId: 'output' } });\nconst score = vf.EasyScore();\nconst system = vf.System();\n\n// Create a 4/4 treble stave and add two parallel voices.\nsystem.addStave({\n  voices: [\n    // Top voice has 4 quarter notes with stems up.\n    score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),\n\n    // Bottom voice has two half notes, with stems down.\n    score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))\n  ]\n}).addClef('treble').addTimeSignature('4/4');\n\n// Draw it!\nvf.draw();`,
+            v3: `// VexFlow 3.0.9 Hello World\n\nconst { Factory } = Vex.Flow;\n\n// Create a VexFlow renderer attached to the DIV element with id="output".\nconst vf = new Factory({ renderer: { elementId: 'output' } });\nconst score = vf.EasyScore();\nconst system = vf.System();\n\n// Create a 4/4 treble stave and add two parallel voices.\nsystem.addStave({\n  voices: [\n    // Top voice has 4 quarter notes with stems up.\n    score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),\n\n    // Bottom voice has two half notes, with stems down.\n    score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))\n  ]\n}).addClef('treble').addTimeSignature('4/4');\n\n// Draw it!\nvf.draw();`,
+        },
+    };
+</script>
         <script>
             let currentVersion = 5;
 
@@ -161,6 +162,11 @@
 
                 highlightSelectedVersion();
                 enableButton();
+                runCode(); // Automatically run the example code whenever the version changes.
+            }
+
+            function clearOutput() {
+                document.getElementById("output").innerHTML = "";
             }
 
             function enableButton() {
@@ -172,6 +178,7 @@
             }
 
             function runCode() {
+                clearOutput();
                 const code = document.getElementById("code").value;
                 eval(code);
             }
