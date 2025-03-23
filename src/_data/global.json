@@ -1,4 +1,23 @@
 {
   "name": "VexFlow",
-  "year": 2025
+  "year": 2025,
+  "v5": {
+    "version_number": "5.0.0",
+    "github_url": "https://github.com/vexflow/vexflow/releases/tag/5.0.0",
+    "npm_url": "https://www.npmjs.com/package/vexflow/v/5.0.0",
+    "jsdelivr_cjs_url": "https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js",
+    "jsdelivr_esm_url": "https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/esm/entry/vexflow-debug.js"
+  },
+  "v4": {
+    "version_number": "4.2.6",
+    "github_url": "https://github.com/0xfe/vexflow/releases/tag/4.2.6",
+    "npm_url": "https://www.npmjs.com/package/vexflow4/v/4.2.6",
+    "jsdelivr_cjs_url": "https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js"
+  },
+  "v3": {
+    "version_number": "3.0.9",
+    "github_url": "https://github.com/vexflow/vexflow/releases/tag/3.0.9",
+    "npm_url": "https://www.npmjs.com/package/vexflow/v/3.0.9",
+    "jsdelivr_cjs_url": "https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js"
+  }
 }

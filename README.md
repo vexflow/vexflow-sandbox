@@ -14,4 +14,4 @@ The site is built with the [11ty](https://www.11ty.dev/) static site generator.
 1. Other pages in `src/` will be translated to paths as follows:
     - `hello.html` → `/hello/`
     - `typescript.html` → `/typescript/`
-    - `readme.md` → `/readme/`
+    - `about.md` → `/about/`

@@ -9,7 +9,7 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400" rel="stylesheet" />
         <style>
             * {
-                margin: 12px;
+                margin: 0;
                 padding: 0;
                 box-sizing: border-box;
                 font-family:
@@ -41,10 +41,10 @@
 
             .content {
                 border: 1px solid #aaa;
-                min-height: 600px;
+                min-height: 500px;
                 width: 100%;
                 background-color: #fefeff;
-                margin: 0 auto; /* This centers the div horizontally if you want */
+                margin: 0 auto;
             }
         </style>
 
@@ -58,14 +58,16 @@
                 margin: 20px auto;
                 padding: 0 20px;
             }
+
             textarea {
                 width: 100%;
-                height: 200px;
+                height: 500px;
                 font-family: monospace;
                 margin: 20px 0px;
                 padding: 20px;
                 border: 1px solid #ccc;
             }
+
             button {
                 background: #0070f3;
                 color: white;
@@ -76,106 +78,144 @@
                 font-size: 16px;
                 width: 160px;
             }
+
             button:hover {
                 background: #0051a2;
+            }
+
+            button[disabled] {
+                background: #ccc;
+                color: #999;
+                cursor: not-allowed;
+            }
+
+            .versionButton {
+                padding: 14px 20px;
+                background: none;
+                color: black;
             }
 
             .selectedVersionHighlight {
                 background: #8050b3;
                 color: white;
-                padding: 14px 20px;
-                border: none;
             }
         </style>
         <script>
+            const code = {
+                hello_world: {
+                    v5: `{{ vexflow_code.hello_world.v5 }}`,
+                    v4: `{{ vexflow_code.hello_world.v4 }}`,
+                    v3: `{{ vexflow_code.hello_world.v3 }}`,
+                },
+            };
+        </script>
+        <script>
             let currentVersion = 5;
 
-            function getQueryParams() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const version = urlParams.get("ver");
-                if (version) {
-                    currentVersion = parseInt(version);
-                    setVersion(currentVersion);
-                }
+            let v5VexFlowObject;
+            let v4VexFlowObject;
+            let v3VexFlowObject;
+
+            function loadScript(src) {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement("script");
+                    script.src = src;
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
             }
 
-            getQueryParams();
+            function updateSelectedVersionFromQueryParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const version = urlParams.get("ver") ?? "5";
+                setVersion(parseInt(version));
+            }
 
-            function highlightSelectedVersion(version) {
+            function highlightSelectedVersion() {
                 document.querySelector(".selectedVersionHighlight").classList.remove("selectedVersionHighlight");
-                document.querySelector(`#v${version}Link`).classList.add("selectedVersionHighlight");
+                document.querySelector(`#v${currentVersion}Link`).classList.add("selectedVersionHighlight");
             }
 
             function setVersion(version) {
+                currentVersion = version;
+
                 delete window.Vex;
                 delete window.VexFlow;
 
-                let vfURL = "";
-                switch (version) {
+                switch (currentVersion) {
                     case 5:
                     default:
-                        console.log("Switched to version 5");
-                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js`;
+                        window.VexFlow = v5VexFlowObject;
+                        showCode(code.hello_world.v5);
                         break;
                     case 4:
-                        console.log("Switched to version 4");
-                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js`;
+                        window.Vex = v4VexFlowObject;
+                        showCode(code.hello_world.v4);
                         break;
                     case 3:
-                        console.log("Switched to version 3");
-                        vfURL = `https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js`;
+                        window.Vex = v3VexFlowObject;
+                        showCode(code.hello_world.v3);
                         break;
                 }
 
-                highlightSelectedVersion(version);
+                highlightSelectedVersion();
+                enableButton();
+            }
 
-                const script = document.createElement("script");
-                script.src = vfURL;
-                script.onload = function () {
-                    // V3 and V4.
-                    if (window.Vex) {
-                        console.log("Vex is:");
-                        console.dir(Vex);
-                        // V4.
-                        if (Vex.BUILD) {
-                            console.log(VexFlow.BUILD);
-                        }
-                    }
-                    // V5 and above.
-                    if (window.VexFlow) {
-                        console.log("VexFlow is:");
-                        console.dir(VexFlow);
-                        console.log(VexFlow.BUILD);
-                    }
-                };
-                document.head.appendChild(script);
+            function enableButton() {
+                document.getElementById("runButton").disabled = false;
+            }
+
+            function showCode(str) {
+                document.getElementById("code").value = str;
             }
 
             function runCode() {
                 const code = document.getElementById("code").value;
                 eval(code);
             }
+
+            async function loadVexFlowScriptsInOrder() {
+                try {
+                    await loadScript("{{ global.v5.jsdelivr_cjs_url }}");
+                    v5VexFlowObject = window.VexFlow;
+
+                    await loadScript("{{ global.v4.jsdelivr_cjs_url }}");
+                    v4VexFlowObject = window.Vex;
+
+                    await loadScript("{{ global.v3.jsdelivr_cjs_url }}");
+                    v3VexFlowObject = window.Vex;
+
+                    // Once all the scripts are loaded, we can check this page's query params.
+                    updateSelectedVersionFromQueryParams();
+                } catch (error) {
+                    console.error("Script loading failed:", error);
+                }
+            }
+
+            loadVexFlowScriptsInOrder();
         </script>
     </head>
     <body>
         <div class="title">VexFlow Sandbox</div>
+        <div>&nbsp;</div>
         <div class="versions">
-            <a id="v5Link" href="javascript:setVersion(5)" class="selectedVersionHighlight">v5</a>
-            |
-            <a id="v4Link" href="javascript:setVersion(4)">v4</a>
-            |
-            <a id="v3Link" href="javascript:setVersion(3)">v3</a>
+            <a id="v5Link" href="javascript:setVersion(5)" class="selectedVersionHighlight versionButton">v5</a>
+            &nbsp • &nbsp;
+            <a id="v4Link" href="javascript:setVersion(4)" class="versionButton">v4</a>
+            &nbsp; • &nbsp;
+            <a id="v3Link" href="javascript:setVersion(3)" class="versionButton">v3</a>
         </div>
-        <div class="content"></div>
-        <textarea id="code">
-let x = 5;
-let y = 10;
-console.log(x + y);
-        </textarea>
+        <div>&nbsp;</div>
+        <div id="output" class="content"></div>
+        <textarea id="code"></textarea>
         <br />
-        <button onclick="runCode()">Run Code</button>
-        <div>Open the console to see the output.</div>
-
+        <div style="text-align: right">
+            <span style="margin-right: 20px">Open the console to see the output.</span
+            ><button id="runButton" disabled onclick="runCode()">Run Code</button>
+        </div>
+        <div>&nbsp;</div>
         {% include 'footer.html' %}
     </body>
 </html>
