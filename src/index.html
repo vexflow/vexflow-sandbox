@@ -7,6 +7,7 @@
         <meta name="description" content="VexFlow Sandbox" />
         <meta name="author" content="Ron B. Yeh" />
         <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400" rel="stylesheet" />
+        <link rel="stylesheet" href="/c/prism.css" />
         <style>
             * {
                 margin: 0;
@@ -47,7 +48,6 @@
                 margin: 0 auto;
             }
         </style>
-
         <style>
             body {
                 font-family:
@@ -100,15 +100,7 @@
                 color: white;
             }
         </style>
-        <script>
-            const code = {
-                hello_world: {
-                    v5: `{{ vexflow_code.hello_world.v5 }}`,
-                    v4: `{{ vexflow_code.hello_world.v4 }}`,
-                    v3: `{{ vexflow_code.hello_world.v3 }}`,
-                },
-            };
-        </script>
+        {{ vexflow_code}}
         <script>
             let currentVersion = 5;
 
@@ -161,6 +153,11 @@
 
                 highlightSelectedVersion();
                 enableButton();
+                runCode(); // Automatically run the example code whenever the version changes.
+            }
+
+            function clearOutput() {
+                document.getElementById("output").innerHTML = "";
             }
 
             function enableButton() {
@@ -172,6 +169,7 @@
             }
 
             function runCode() {
+                clearOutput();
                 const code = document.getElementById("code").value;
                 eval(code);
             }
