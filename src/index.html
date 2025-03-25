@@ -45,15 +45,6 @@
                     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             }
 
-            textarea {
-                width: 100%;
-                height: 500px;
-                font-family: monospace;
-                margin: 20px 0px;
-                padding: 20px;
-                border: 1px solid #ccc;
-            }
-
             button {
                 background: #0070f3;
                 color: white;
@@ -103,8 +94,7 @@
         </div>
         <div>&nbsp;</div>
         <div id="output" class="content"></div>
-        <textarea id="code"></textarea>
-        <pre><code id="code2" class="lang-js" contenteditable="true">
+        <pre><code id="code" class="lang-js" contenteditable="true">
         </code></pre>
         <br />
         <div style="text-align: right">
@@ -112,7 +102,7 @@
         </div>
         <div>&nbsp;</div>
         {% include 'footer.html' %}
-        <!--  -->
+        <!-- IGNORE THIS COMMENT: I'M JUST A SEPARATOR! -->
         {{ vexflow_code}}
         <script>
             let currentVersion = 5;
@@ -148,22 +138,25 @@
                 delete window.Vex;
                 delete window.VexFlow;
 
+                let c;
+
                 switch (currentVersion) {
                     case 5:
                     default:
                         window.VexFlow = v5VexFlowObject;
-                        showCode(code.hello_world.v5);
+                        c = code.hello_world.v5;
                         break;
                     case 4:
                         window.Vex = v4VexFlowObject;
-                        showCode(code.hello_world.v4);
+                        c = code.hello_world.v4;
                         break;
                     case 3:
                         window.Vex = v3VexFlowObject;
-                        showCode(code.hello_world.v3);
+                        c = code.hello_world.v3;
                         break;
                 }
 
+                showCode(c);
                 highlightSelectedVersion();
                 enableButton();
                 runCode(); // Automatically run the example code whenever the version changes.
@@ -178,27 +171,34 @@
             }
 
             function showCode(str) {
-                console.log(document.getElementById("code"));
-                document.getElementById("code").value = str;
-                document.getElementById("code2").innerHTML = str;
+                document.getElementById("code").innerHTML = str;
+                window.Prism.highlightElement(document.getElementById("code"));
             }
 
             function runCode() {
                 clearOutput();
-                const code = document.getElementById("code").value;
+                const code = document.getElementById("code").innerText;
                 eval('"use strict";' + code);
             }
 
+            // CTRL/CMD + Enter => Run Code
+            document.addEventListener("keydown", function (event) {
+                if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                    runCode();
+                    event.preventDefault();
+                }
+            });
+
             async function loadVexFlowScriptsInOrder() {
                 try {
-                    // await loadScript("{{ global.v5.jsdelivr_cjs_url }}");
+                    await loadScript("{{ global.v5.jsdelivr_cjs_url }}");
                     v5VexFlowObject = window.VexFlow;
 
-                    // await loadScript("{{ global.v4.jsdelivr_cjs_url }}");
-                    // v4VexFlowObject = window.Vex;
+                    await loadScript("{{ global.v4.jsdelivr_cjs_url }}");
+                    v4VexFlowObject = window.Vex;
 
-                    // await loadScript("{{ global.v3.jsdelivr_cjs_url }}");
-                    // v3VexFlowObject = window.Vex;
+                    await loadScript("{{ global.v3.jsdelivr_cjs_url }}");
+                    v3VexFlowObject = window.Vex;
 
                     // Once all the scripts are loaded, we can check this page's query params.
                     updateSelectedVersionFromQueryParams();
