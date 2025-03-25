@@ -31,10 +31,30 @@ function loadScript(src) {
   });
 }
 
-function updateSelectedVersionFromQueryParams() {
+function loadQueryParams() {
   const urlParams = new URLSearchParams(window.location.search);
+
+  const defaultDemo = "hello";
+  let demo = urlParams.get("demo") ?? defaultDemo;
+  const fileSelect = document.getElementById("fileSelect");
+  if (fileSelect.querySelector(`option[value="${demo}"]`) == null) {
+    demo = defaultDemo;
+  }
+  fileSelect.value = demo;
+
   const version = urlParams.get("ver") ?? "5";
   setVersion(parseInt(version));
+}
+
+function getSelectedFile() {
+  return document.getElementById("fileSelect").value;
+}
+
+function saveQueryParams() {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.set("ver", selectedVersion);
+  urlParams.set("demo", getSelectedFile());
+  window.history.replaceState({}, "", `?${urlParams.toString()}`);
 }
 
 function highlightSelectedVersion() {
@@ -66,9 +86,7 @@ function setVersion(v) {
 
 // Load JS files from /j/examples/*.js|ts
 async function loadAndRunFile() {
-  const selectedFile = document.getElementById("fileSelect").value;
-  console.log(examples[selectedFile]);
-  let examplePath = "/j/examples/" + examples[selectedFile][selectedVersion];
+  let examplePath = "/j/examples/" + examples[getSelectedFile()][selectedVersion];
 
   const response = await fetch(examplePath);
   const code = await response.text();
@@ -88,7 +106,7 @@ function enableButton() {
 
 function showCode(str) {
   document.getElementById("code").innerHTML = str;
-  window.Prism.highlightElement(document.getElementById("code"));
+  Prism.highlightElement(document.getElementById("code"));
 }
 
 async function runCode() {
@@ -102,6 +120,22 @@ async function runCode() {
 // Connect the runButton to the runCode function.
 document.getElementById("runButton").addEventListener("click", runCode);
 
+// Set up the version selection
+document.getElementById("v5Link").addEventListener("click", () => {
+  setVersion(5);
+  saveQueryParams();
+});
+
+document.getElementById("v4Link").addEventListener("click", () => {
+  setVersion(4);
+  saveQueryParams();
+});
+
+document.getElementById("v3Link").addEventListener("click", () => {
+  setVersion(3);
+  saveQueryParams();
+});
+
 // CTRL/CMD + Enter => Run Code
 document.addEventListener("keydown", (event) => {
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
@@ -110,11 +144,11 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-// add a listener to fileSelect
+// When the user chooses a file from the dropdown, we load and run the code.
 document.getElementById("fileSelect").addEventListener("change", async (event) => {
   const fileName = event.target.value;
-  console.log("Selected example file:", fileName);
   loadAndRunFile();
+  saveQueryParams();
 });
 
 // Convert TS import statement to JS destructuring assignment.
@@ -143,7 +177,7 @@ async function loadVexFlowScriptsInOrder() {
     v3VexFlowObject = window.Vex;
 
     // Once all the scripts are loaded, we can check this page's query params.
-    updateSelectedVersionFromQueryParams();
+    loadQueryParams();
   } catch (error) {
     console.error("Script loading failed:", error);
   }
