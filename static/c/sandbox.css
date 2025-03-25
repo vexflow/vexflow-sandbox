@@ -28,12 +28,20 @@ body {
     font-size: 1.2em;
 }
 
+#toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
 .content {
     border: 1px solid #aaa;
-    min-height: 700px;
+    min-height: 200px;
     width: 100%;
     background-color: #fefeff;
     margin: 0 auto;
+    margin-bottom: 28px;
 }
 
 button {
@@ -69,11 +77,16 @@ button[disabled] {
 }
 
 select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 14px 20px;
+    border: 1px solid #8050b3;
+    border-radius: 0px;
     font-size: 16px;
     width: 200px;
+}
+
+select:hover {
+    background-color: #8050b3;
+    color: #fff;
 }
 
 pre code[contenteditable="true"] {
