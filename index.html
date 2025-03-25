@@ -8,83 +8,16 @@
         <meta name="author" content="Ron B. Yeh" />
         <link rel="stylesheet" href="/c/prism.css" />
         <script src="/j/prism.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow.js"></script>
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            .title {
-                font-size: 2.2em;
-                display: flex;
-                justify-content: center;
-            }
-            .versions {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 1.2em;
-            }
-
-            .content {
-                border: 1px solid #aaa;
-                min-height: 500px;
-                width: 100%;
-                background-color: #fefeff;
-                margin: 0 auto;
-            }
-
-            body {
-                background-color: #fcfcfb;
-                color: #333;
-                max-width: 1000px;
-                margin: 20px auto;
-                padding: 0 20px;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-                    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            }
-
-            button {
-                background: #0070f3;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 20px;
-                cursor: pointer;
-                font-size: 16px;
-                width: 160px;
-            }
-
-            button:hover {
-                background: #0051a2;
-            }
-
-            button[disabled] {
-                background: #ccc;
-                color: #999;
-                cursor: not-allowed;
-            }
-
-            .versionButton {
-                padding: 14px 20px;
-                background: none;
-                color: black;
-            }
-
-            .selectedVersionHighlight {
-                background: #8050b3;
-                color: white;
-            }
-
-            pre code[contenteditable="true"] {
-                outline: none;
-            }
-        </style>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.8.2/typescript.min.js"
+            integrity="sha512-yVpT3BIRi+wdbUsHF42jJf60+w5usFpkk3irczfxZzi1RycIX3TF5vLsWPfLtTFugEjKy+seAJdyYCHhym518w=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <link rel="stylesheet" href="/c/sandbox.css" />
     </head>
     <body>
         <div class="title">VexFlow Sandbox</div>
-        <div>&nbsp;</div>
         <div class="versions">
             <a id="v5Link" href="javascript:setVersion(5)" class="selectedVersionHighlight versionButton">v5</a>
             &nbsp • &nbsp;
@@ -92,134 +25,23 @@
             &nbsp; • &nbsp;
             <a id="v3Link" href="javascript:setVersion(3)" class="versionButton">v3</a>
         </div>
+        <select id="fileSelect">
+            <option value="hello">Hello World</option>
+            <option value="minuet">Minuet in G</option>
+        </select>
         <div>&nbsp;</div>
         <div id="output" class="content"></div>
         <pre><code id="code" class="lang-js" contenteditable="true">
         </code></pre>
         <br />
         <div style="text-align: right">
-            <button id="runButton" disabled onclick="runCode()">Run Code</button>
+            <button id="runButton" disabled>Run Code</button>
         </div>
         <div>&nbsp;</div>
         <div>&nbsp;</div>
 <hr />
 <div style="text-align: right">&copy; 2025 VexFlow</div>
 
-        <!-- IGNORE THIS COMMENT: I'M JUST A SEPARATOR! -->
-        
-<script>
-    const code = {
-        hello_world: {
-            v5: `// VexFlow 5 Hello World\n\nconst { Factory } = VexFlow;\n\n// Create a VexFlow renderer attached to the DIV element with id="output".\nconst vf = new Factory({ renderer: { elementId: 'output' } });\nconst score = vf.EasyScore();\nconst system = vf.System();\n\n// Create a 4/4 treble stave and add two parallel voices.\nsystem.addStave({\n  voices: [\n    // Top voice has 4 quarter notes with stems up.\n    score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),\n\n    // Bottom voice has two half notes, with stems down.\n    score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))\n  ]\n}).addClef('treble').addTimeSignature('4/4');\n\n// Draw it!\nvf.draw();`,
-            v4: `// VexFlow 4.2.6 Hello World\n\nconst { Factory } = Vex.Flow;\n\n// Create a VexFlow renderer attached to the DIV element with id="output".\nconst vf = new Factory({ renderer: { elementId: 'output' } });\nconst score = vf.EasyScore();\nconst system = vf.System();\n\n// Create a 4/4 treble stave and add two parallel voices.\nsystem.addStave({\n  voices: [\n    // Top voice has 4 quarter notes with stems up.\n    score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),\n\n    // Bottom voice has two half notes, with stems down.\n    score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))\n  ]\n}).addClef('treble').addTimeSignature('4/4');\n\n// Draw it!\nvf.draw();`,
-            v3: `// VexFlow 3.0.9 Hello World\n\nconst { Factory } = Vex.Flow;\n\n// Create a VexFlow renderer attached to the DIV element with id="output".\nconst vf = new Factory({ renderer: { elementId: 'output' } });\nconst score = vf.EasyScore();\nconst system = vf.System();\n\n// Create a 4/4 treble stave and add two parallel voices.\nsystem.addStave({\n  voices: [\n    // Top voice has 4 quarter notes with stems up.\n    score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),\n\n    // Bottom voice has two half notes, with stems down.\n    score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))\n  ]\n}).addClef('treble').addTimeSignature('4/4');\n\n// Draw it!\nvf.draw();`,
-        },
-    };
-</script>
-        <script>
-            let currentVersion = 5;
-
-            let v5VexFlowObject;
-            let v4VexFlowObject;
-            let v3VexFlowObject;
-
-            function loadScript(src) {
-                return new Promise((resolve, reject) => {
-                    const script = document.createElement("script");
-                    script.src = src;
-                    script.onload = resolve;
-                    script.onerror = reject;
-                    document.head.appendChild(script);
-                });
-            }
-
-            function updateSelectedVersionFromQueryParams() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const version = urlParams.get("ver") ?? "5";
-                setVersion(parseInt(version));
-            }
-
-            function highlightSelectedVersion() {
-                document.querySelector(".selectedVersionHighlight").classList.remove("selectedVersionHighlight");
-                document.querySelector(`#v${currentVersion}Link`).classList.add("selectedVersionHighlight");
-            }
-
-            function setVersion(version) {
-                currentVersion = version;
-
-                delete window.Vex;
-                delete window.VexFlow;
-
-                let c;
-
-                switch (currentVersion) {
-                    case 5:
-                    default:
-                        window.VexFlow = v5VexFlowObject;
-                        c = code.hello_world.v5;
-                        break;
-                    case 4:
-                        window.Vex = v4VexFlowObject;
-                        c = code.hello_world.v4;
-                        break;
-                    case 3:
-                        window.Vex = v3VexFlowObject;
-                        c = code.hello_world.v3;
-                        break;
-                }
-
-                showCode(c);
-                highlightSelectedVersion();
-                enableButton();
-                runCode(); // Automatically run the example code whenever the version changes.
-            }
-
-            function clearOutput() {
-                document.getElementById("output").innerHTML = "";
-            }
-
-            function enableButton() {
-                document.getElementById("runButton").disabled = false;
-            }
-
-            function showCode(str) {
-                document.getElementById("code").innerHTML = str;
-                window.Prism.highlightElement(document.getElementById("code"));
-            }
-
-            function runCode() {
-                clearOutput();
-                const code = document.getElementById("code").innerText;
-                eval('"use strict";' + code);
-            }
-
-            // CTRL/CMD + Enter => Run Code
-            document.addEventListener("keydown", function (event) {
-                if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
-                    runCode();
-                    event.preventDefault();
-                }
-            });
-
-            async function loadVexFlowScriptsInOrder() {
-                try {
-                    await loadScript("https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js");
-                    v5VexFlowObject = window.VexFlow;
-
-                    await loadScript("https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js");
-                    v4VexFlowObject = window.Vex;
-
-                    await loadScript("https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js");
-                    v3VexFlowObject = window.Vex;
-
-                    // Once all the scripts are loaded, we can check this page's query params.
-                    updateSelectedVersionFromQueryParams();
-                } catch (error) {
-                    console.error("Script loading failed:", error);
-                }
-            }
-
-            loadVexFlowScriptsInOrder();
-        </script>
+        <script src="/j/sandbox.js"></script>
     </body>
 </html>
