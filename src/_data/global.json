@@ -12,7 +12,8 @@
     "version_number": "4.2.6",
     "github_url": "https://github.com/0xfe/vexflow/releases/tag/4.2.6",
     "npm_url": "https://www.npmjs.com/package/vexflow4/v/4.2.6",
-    "jsdelivr_cjs_url": "https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js"
+    "jsdelivr_cjs_url": "https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js",
+    "jsdelivr_esm_url": "https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/esm/entry/vexflow-debug.js"
   },
   "v3": {
     "version_number": "3.0.9",
