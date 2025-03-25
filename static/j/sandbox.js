@@ -86,7 +86,7 @@ function setVersion(v) {
 
 // Load JS files from /j/examples/*.js|ts
 async function loadAndRunFile() {
-  let examplePath = "/j/examples/" + examples[getSelectedFile()][selectedVersion];
+  let examplePath = "j/examples/" + examples[getSelectedFile()][selectedVersion];
 
   const response = await fetch(examplePath);
   const code = await response.text();
