@@ -33,6 +33,7 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
+    /* border: 1px solid red; */
 }
 
 .content {
@@ -65,17 +66,6 @@ button[disabled] {
     cursor: not-allowed;
 }
 
-.versionButton {
-    padding: 14px 20px;
-    background: none;
-    color: black;
-}
-
-.selectedVersionHighlight {
-    background: #8050b3;
-    color: white;
-}
-
 select {
     padding: 14px 20px;
     border: 1px solid #8050b3;
@@ -85,10 +75,27 @@ select {
 }
 
 select:hover {
-    background-color: #8050b3;
-    color: #fff;
+    background-color: #e5dcef;
+    cursor: pointer;
 }
 
-pre code[contenteditable="true"] {
+/* Prism.js */
+
+pre[class*="language-"],
+code[class*="language-"] {
     outline: none;
+    border-radius: 0px;
+}
+
+/* Custom CSS to modify Prism.js toolbar height */
+.toolbar {
+    border: 1px solid red;
+}
+
+/* If you want to reduce padding or adjust specific elements */
+.toolbar-item > button {
+    height: 30px; /* Fill entire toolbar height */
+    padding: 10px;
+    margin: 10px;
+    border-radius: 0px;
 }
