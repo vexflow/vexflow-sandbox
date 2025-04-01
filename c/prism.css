@@ -193,13 +193,14 @@ div.code-toolbar > .toolbar > .toolbar-item > button {
 div.code-toolbar > .toolbar > .toolbar-item > a,
 div.code-toolbar > .toolbar > .toolbar-item > button,
 div.code-toolbar > .toolbar > .toolbar-item > span {
-    color: #bbb;
-    font-size: 0.8em;
-    padding: 0 0.5em;
+    color: #ccc;
+    font-size: 0.9em;
+    padding: 0;
+    margin: 10px 8px;
+    height: 36px;
     background: #f5f2f0;
     background: rgba(224, 224, 224, 0.2);
     box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2);
-    border-radius: 0.5em;
 }
 div.code-toolbar > .toolbar > .toolbar-item > a:focus,
 div.code-toolbar > .toolbar > .toolbar-item > a:hover,

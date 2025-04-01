@@ -117,6 +117,18 @@ async function runCode() {
 // Connect the runButton to the runCode function.
 runButton.addEventListener("click", runCode);
 
+function changeSelectedItem(selectBox, direction) {
+  let newIndex = selectBox.selectedIndex + direction;
+  if (newIndex < 0) {
+    newIndex = selectBox.options.length - 1;
+  }
+  if (newIndex >= selectBox.options.length) {
+    newIndex = 0;
+  }
+  selectBox.selectedIndex = newIndex;
+  selectBox.dispatchEvent(new Event("change"));
+}
+
 document.addEventListener("keydown", (event) => {
   // CTRL/CMD + Enter => Run Code
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
@@ -124,38 +136,32 @@ document.addEventListener("keydown", (event) => {
     runCode();
   }
 
+  // Make sure the <code> is not in focus.
   if (document.activeElement.id !== "code") {
-    // Arrow keys UP/DOWN/LEFT/RIGHT changes the currently selected file.
     if (event.key.startsWith("Arrow")) {
-      let d;
       switch (event.key) {
+        // Arrow keys UP/DOWN change the currently selected VERSION.
         case "ArrowUp":
-          d = -1;
+          changeSelectedItem(versionSelect, -1);
           break;
         case "ArrowDown":
-          d = 1;
+          changeSelectedItem(versionSelect, +1);
           break;
+        // Arrow keys LEFT/RIGHT change the currently selected FILE.
         case "ArrowLeft":
-          d = -1;
+          changeSelectedItem(fileSelect, -1);
           break;
         case "ArrowRight":
-          d = 1;
+          changeSelectedItem(fileSelect, +1);
           break;
       }
-      let newIndex = fileSelect.selectedIndex + d;
-      if (newIndex < 0) {
-        newIndex = fileSelect.options.length - 1;
-      }
-      if (newIndex >= fileSelect.options.length) {
-        newIndex = 0;
-      }
-      fileSelect.selectedIndex = newIndex;
-      fileSelect.dispatchEvent(new Event("change"));
     } else if (event.key >= "1" && event.key <= "5") {
       // Number keys 5, 4, 3, 2, 1 select the correct VexFlow version.
-      // Make sure the <code> is not in focus.
-      // Update versionSelect
-      versionSelect.value = event.key;
+      if (event.key === "1") {
+        versionSelect.value = "2"; // SPECIAL CASE. Alias 1 => 2
+      } else {
+        versionSelect.value = event.key;
+      }
       versionSelect.dispatchEvent(new Event("change"));
     }
   }

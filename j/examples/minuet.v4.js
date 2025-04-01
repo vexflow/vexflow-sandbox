@@ -1,4 +1,4 @@
-// VexFlow 5 – Minuet in G (TypeScript)
+// VexFlow 4.2.6 – Minuet in G (TypeScript)
 
 import { BarlineType, Factory, Registry, Renderer, StaveNote } from "vexflow";
 
