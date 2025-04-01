@@ -117,31 +117,53 @@ async function runCode() {
 // Connect the runButton to the runCode function.
 runButton.addEventListener("click", runCode);
 
-// CTRL/CMD + Enter => Run Code
 document.addEventListener("keydown", (event) => {
+  // CTRL/CMD + Enter => Run Code
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
     event.preventDefault();
     runCode();
   }
 
-  // Number keys 5, 4, 3, 2, 1 select the correct VexFlow version.
-  // Make sure the <code> is not in focus.
-  if (document.activeElement.id !== "code" && event.key >= "1" && event.key <= "5") {
-    // Update versionSelect
-    versionSelect.value = event.key;
-    versionSelect.dispatchEvent(new Event("change"));
+  if (document.activeElement.id !== "code") {
+    // Arrow keys UP/DOWN/LEFT/RIGHT changes the currently selected file.
+    if (event.key.startsWith("Arrow")) {
+      let d;
+      switch (event.key) {
+        case "ArrowUp":
+          d = -1;
+          break;
+        case "ArrowDown":
+          d = 1;
+          break;
+        case "ArrowLeft":
+          d = -1;
+          break;
+        case "ArrowRight":
+          d = 1;
+          break;
+      }
+      let newIndex = fileSelect.selectedIndex + d;
+      if (newIndex < 0) {
+        newIndex = fileSelect.options.length - 1;
+      }
+      if (newIndex >= fileSelect.options.length) {
+        newIndex = 0;
+      }
+      fileSelect.selectedIndex = newIndex;
+      fileSelect.dispatchEvent(new Event("change"));
+    } else if (event.key >= "1" && event.key <= "5") {
+      // Number keys 5, 4, 3, 2, 1 select the correct VexFlow version.
+      // Make sure the <code> is not in focus.
+      // Update versionSelect
+      versionSelect.value = event.key;
+      versionSelect.dispatchEvent(new Event("change"));
+    }
   }
 });
 
-// When the user chooses a file from the dropdown, we load and run the code.
-fileSelect.addEventListener("change", () => {
-  show();
-});
-
-// When the user chooses a version from the dropdown, we load and run the code.
-versionSelect.addEventListener("change", () => {
-  show();
-});
+// When the user chooses a file or version from the dropdowns, we load and run the code.
+fileSelect.addEventListener("change", show);
+versionSelect.addEventListener("change", show);
 
 // Convert TS import statement to JS destructuring assignment.
 // Use a regex to convert from:
