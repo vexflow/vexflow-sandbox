@@ -1,3 +1,5 @@
+// VexFlow 3.0.9 – Minuet in G (JavaScript)
+
 var VF = Vex.Flow;
 
 var registry = new VF.Registry();
