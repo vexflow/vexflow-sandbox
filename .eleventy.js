@@ -1,6 +1,5 @@
 export default async function (eleventyConfig) {
   eleventyConfig.addGlobalData("currDate", () => new Date());
-
   eleventyConfig.addPassthroughCopy({ static: "/" });
 }
 

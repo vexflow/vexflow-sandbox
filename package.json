@@ -2,7 +2,7 @@
   "name": "vexflow-sandbox",
   "type": "module",
   "version": "1.0.0",
-  "description": "Website",
+  "description": "VexFlow Sandbox",
   "main": "index.js",
   "scripts": {
     "build": "eleventy --input=src --output=_site",

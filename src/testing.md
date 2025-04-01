@@ -1,6 +1,6 @@
 ---
 title: Testing
-layout: markdown_layout.njk
+layout: layout_md.njk
 ---
 
 Test thoroughly before making new releases!
