@@ -1,3 +1,23 @@
 <div>&nbsp;</div>
 <hr />
-<div style="text-align: right; margin-top: 10px">&copy; {{ global.year }} {{ global.name }}</div>
+<style>
+  .footer-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    float: right;
+    margin-top: 12px;
+  }
+
+  .footer-text {
+    margin-right: 10px;
+  }
+
+  .footer-image {
+    height: 30px;
+  }
+</style>
+<div class="footer-container">
+  <div class="footer-text">&copy; {{ global.year }} {{ global.name }}</div>
+  <img class="footer-image" src="/i/logo.svg" alt="VexFlow Logo" />
+</div>
