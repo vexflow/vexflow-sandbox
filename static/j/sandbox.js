@@ -1,11 +1,11 @@
-// TODO: How to know if the code we're running uses Canvas context?
-
 if (window.location.protocol === "file:") {
   const message = "This sandbox cannot be viewed from a file:// URL. Use `npm start` instead.";
   console.log(message);
   alert(message);
 }
 
+// To load your local dev copy of vexflow-debug.js, start a web server from the vexflow/ directory:
+// npx http-server
 const local_cjs_url = "http://localhost:8080/build/cjs/vexflow-debug.js?random=" + Math.random();
 const v5_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js";
 const v4_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js";
@@ -25,10 +25,12 @@ const fileSelect = document.getElementById("fileSelect");
 const fileQueryParamName = "file";
 const files = [
   { value: "hello", label: "Hello World" },
+  { value: "canvas", label: "Canvas" },
   { value: "bass", label: "Bass Clef" },
   { value: "rests", label: "Rests" },
   { value: "minuet", label: "Minuet in G" },
 ];
+const filesRequiringCanvas = new Set(["canvas"]);
 
 const versionSelect = document.getElementById("versionSelect");
 const versionQueryParamName = "ver";
@@ -102,7 +104,15 @@ async function loadAndRunFile() {
     fileVersion = "5"; // The local development library should use example code for v5.
   }
 
-  const examplePath = "examples/" + fileSelect.value + ".v" + fileVersion + ".ts";
+  const fileName = fileSelect.value;
+
+  if (filesRequiringCanvas.has(fileName)) {
+    document.getElementById("container").innerHTML = '<canvas id="output" class="content"></canvas>';
+  } else {
+    document.getElementById("container").innerHTML = '<div id="output" class="content"></div>';
+  }
+
+  const examplePath = "examples/" + fileName + ".v" + fileVersion + ".ts";
   const response = await fetch(examplePath);
   const codeText = await response.text();
   code.innerHTML = codeText;
@@ -112,7 +122,6 @@ async function loadAndRunFile() {
 }
 
 async function runCode() {
-  output.innerHTML = "";
   let c = code.innerText;
   c = changeTypeScriptImportToJavaScriptImport(c);
   const transpiledCode = ts.transpile(c, { compilerOptions: { target: ts.ScriptTarget.ES2015 } });
@@ -244,9 +253,17 @@ async function loadVexFlowScriptsInOrder() {
 
     await loadScript(v2_jsdelivr_cjs_url);
     v2VexFlowObject = window.Vex;
+  } catch (error) {
+    console.error("Script loading failed:", error);
+  }
 
+  try {
     await addLocalLibraryIfItExists();
+  } catch (error) {
+    console.error("Script loading failed:", error);
+  }
 
+  try {
     populateFileSelect();
     populateVersionSelect();
 
