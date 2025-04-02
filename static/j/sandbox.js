@@ -1,14 +1,25 @@
-let local_cjs_url = undefined;
-// local_cjs_url = "../build/cjs/vexflow-debug.js"; // Uncomment this line to use the local development build.
+// TODO: How to know if the code we're running uses Canvas context?
 
+if (window.location.protocol === "file:") {
+  const message = "This sandbox cannot be viewed from a file:// URL. Use `npm start` instead.";
+  console.log(message);
+  alert(message);
+}
+
+const local_cjs_url = "http://localhost:8080/build/cjs/vexflow-debug.js?random=" + Math.random();
 const v5_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js";
 const v4_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js";
 const v3_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js";
 const v2_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow@1.2.93/releases/vexflow-debug.js";
 
+const urlParams = new URLSearchParams(window.location.search);
+
 const runButton = document.getElementById("runButton");
 const code = document.getElementById("code");
 const output = document.getElementById("output");
+
+const devModeQueryParamName = "dev";
+let devMode = "1";
 
 const fileSelect = document.getElementById("fileSelect");
 const fileQueryParamName = "file";
@@ -49,17 +60,11 @@ function updateDropdown(selectElement, urlParamValue, defaultValue) {
   selectElement.value = v;
 }
 
-// Load & validate the file name and version number.
-function loadQueryParams() {
-  const urlParams = new URLSearchParams(window.location.search);
-  updateDropdown(fileSelect, urlParams.get(fileQueryParamName), files[0].value);
-  updateDropdown(versionSelect, urlParams.get(versionQueryParamName), versions[0].value);
-}
-
 function saveQueryParams() {
   const urlParams = new URLSearchParams(window.location.search);
   urlParams.set(versionQueryParamName, versionSelect.value);
   urlParams.set(fileQueryParamName, fileSelect.value);
+  urlParams.set(devModeQueryParamName, devMode);
   window.history.replaceState({}, "", `?${urlParams.toString()}`);
 }
 
@@ -210,9 +215,12 @@ function loadScript(src) {
 }
 
 async function addLocalLibraryIfItExists() {
-  if (!local_cjs_url) {
+  devMode = urlParams.get(devModeQueryParamName) ?? devMode;
+  if (devMode !== "1") {
+    devMode = "0";
     return;
   }
+
   await loadScript(local_cjs_url);
   localVexFlowObject = window.VexFlow;
 
@@ -242,8 +250,9 @@ async function loadVexFlowScriptsInOrder() {
     populateFileSelect();
     populateVersionSelect();
 
-    // Once all the scripts are loaded, we can check this page's query params.
-    loadQueryParams();
+    // Load & validate the file name and version number.
+    updateDropdown(fileSelect, urlParams.get(fileQueryParamName), files[0].value);
+    updateDropdown(versionSelect, urlParams.get(versionQueryParamName), versions[0].value);
 
     show();
   } catch (error) {
