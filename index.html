@@ -1,15 +1,15 @@
 <!doctype html>
 <html>
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
         <title>VexFlow Sandbox</title>
-        <meta name="description" content="VexFlow Sandbox" />
-        <meta name="author" content="Ron B. Yeh" />
-        <link rel="stylesheet" href="c/prism.css" />
+        <meta name="description" content="VexFlow Sandbox">
+        <meta name="author" content="Ron B. Yeh">
+        <link rel="stylesheet" href="c/prism.css">
         <script src="j/prism.js"></script>
         <script src="j/typescript.5.8.2.js"></script>
-        <link rel="stylesheet" href="c/sandbox.css" />
+        <link rel="stylesheet" href="c/sandbox.css">
     </head>
     <body>
         <template id="my-label-button"><button onclick="runCode();">Run</button></template>
@@ -20,17 +20,34 @@
             <select id="versionSelect"></select>
         </div>
         <div id="container"></div>
-        <pre
-            data-src="plugins/toolbar/prism-toolbar.js"
-            data-label="my-label-button"
-        ><code id="code" class="lang-js" contenteditable="true">
+        <pre data-src="plugins/toolbar/prism-toolbar.js" data-label="my-label-button"><code id="code" class="lang-js" contenteditable="true">
         </code></pre>
         <div style="text-align: right">
-            <button id="runButton" disabled>Run Code</button>
+            <button id="runButton" disabled="">Run Code</button>
         </div>
         <div>&nbsp;</div>
-<hr />
-<div style="text-align: right; margin-top: 10px">&copy; 2025 VexFlow</div>
+<hr>
+<style>
+  .footer-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    float: right;
+    margin-top: 12px;
+  }
+
+  .footer-text {
+    margin-right: 10px;
+  }
+
+  .footer-image {
+    height: 30px;
+  }
+</style>
+<div class="footer-container">
+  <div class="footer-text">&copy; 2025 VexFlow</div>
+  <img class="footer-image" src="/vexflow-sandbox/i/logo.svg" alt="VexFlow Logo">
+</div>
 
         <script src="j/sandbox.js"></script>
     </body>

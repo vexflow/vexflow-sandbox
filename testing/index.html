@@ -1,10 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Testing</title>
-    <link rel="stylesheet" href="c/markdown.css">
+    <link rel="stylesheet" href="/vexflow-sandbox/c/markdown.css">
   </head>
   <body>
     <p>Test thoroughly before making new releases!</p>
@@ -461,14 +461,34 @@ build/types/src/fonts:
 <ol start="5">
 <li>Open <code>vexflow/tests/flow.html</code> and make sure the visual tests pass.</li>
 </ol>
-<img width="800" alt="visual_test" src="https://github.com/user-attachments/assets/99c518d9-abbc-40a7-ac0a-51eb43cc3e47" />
+<img width="800" alt="visual_test" src="https://github.com/user-attachments/assets/99c518d9-abbc-40a7-ac0a-51eb43cc3e47">
 <ol start="6">
 <li>Open the files in <code>vexflow/demos/</code> and make sure each shows the correct output.</li>
 </ol>
 
     <div>&nbsp;</div>
-<hr />
-<div style="text-align: right; margin-top: 10px">&copy; 2025 VexFlow</div>
+<hr>
+<style>
+  .footer-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    float: right;
+    margin-top: 12px;
+  }
+
+  .footer-text {
+    margin-right: 10px;
+  }
+
+  .footer-image {
+    height: 30px;
+  }
+</style>
+<div class="footer-container">
+  <div class="footer-text">&copy; 2025 VexFlow</div>
+  <img class="footer-image" src="/vexflow-sandbox/i/logo.svg" alt="VexFlow Logo">
+</div>
 
   </body>
 </html>
