@@ -8,31 +8,19 @@
         <meta name="author" content="Ron B. Yeh" />
         <link rel="stylesheet" href="c/prism.css" />
         <script src="j/prism.js"></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.8.2/typescript.min.js"
-            integrity="sha512-yVpT3BIRi+wdbUsHF42jJf60+w5usFpkk3irczfxZzi1RycIX3TF5vLsWPfLtTFugEjKy+seAJdyYCHhym518w=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        ></script>
+        <script src="j/typescript.5.8.2.js"></script>
         <link rel="stylesheet" href="c/sandbox.css" />
     </head>
     <body>
         <template id="my-label-button"><button onclick="runCode();">Run</button></template>
-        <div class="title">VexFlow Sandbox</div>
-        <div id="toolbar">
-            <select id="fileSelect">
-                <option value="hello">Hello World</option>
-                <option value="bass">Bass Clef</option>
-                <option value="minuet">Minuet in G</option>
-            </select>
-            <select id="versionSelect">
-                <option value="5">5.x (current)</option>
-                <option value="4">4.2.6</option>
-                <option value="3">3.0.9</option>
-                <option value="2">1.2.93</option>
-            </select>
+        <div class="topbar">
+            <select id="fileSelect"></select>
+            <div class="title">VexFlow Sandbox</div>
+            <select id="versionSelect"></select>
         </div>
         <div id="output" class="content"></div>
+        <!-- In the future, support the canvas context in the sandbox. -->
+        <!-- <canvas id="outputCanvas" class="content"></canvas> -->
         <pre
             data-src="plugins/toolbar/prism-toolbar.js"
             data-label="my-label-button"

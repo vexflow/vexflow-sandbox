@@ -14,11 +14,19 @@ body {
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+/* fileSelect, title, versionSelect */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
 .title {
-    font-size: 2.5em;
+    font-size: 2em;
+    font-weight: bold;
     display: flex;
     justify-content: center;
-    margin-bottom: 30px;
 }
 
 .versions {
@@ -26,14 +34,6 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 1.2em;
-}
-
-/* fileSelect and versionSelect */
-#toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
 }
 
 .content {
@@ -86,4 +86,8 @@ pre[class*="language-"],
 code[class*="language-"] {
     outline: none;
     border-radius: 0px;
+}
+
+#output {
+    overflow: auto;
 }
