@@ -91,3 +91,11 @@ code[class*="language-"] {
 #output {
     overflow: auto;
 }
+
+#message {
+    display: none;
+    font-family: monospace;
+    font-size: 2em;
+    color: red;
+    margin: 30px 0 60px 0;
+}
