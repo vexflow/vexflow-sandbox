@@ -1,6 +1,5 @@
-// const local_cjs_url = undefined;
-// const local_cjs_url = "../build/cjs/vexflow-debug.js"; // Uncomment this line to use the local development build.
-const local_cjs_url = "build/cjs/vexflow-debug.js"; // Uncomment this line to use the local development build.
+let local_cjs_url = undefined;
+// local_cjs_url = "../build/cjs/vexflow-debug.js"; // Uncomment this line to use the local development build.
 
 const v5_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js";
 const v4_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js";
