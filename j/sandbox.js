@@ -1,60 +1,66 @@
+// const local_cjs_url = undefined;
+// const local_cjs_url = "../build/cjs/vexflow-debug.js"; // Uncomment this line to use the local development build.
+const local_cjs_url = "build/cjs/vexflow-debug.js"; // Uncomment this line to use the local development build.
+
 const v5_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow@5.0.0/build/cjs/vexflow-debug.js";
 const v4_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow4@4.2.6/build/cjs/vexflow-debug.js";
 const v3_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow@3.0.9/releases/vexflow-debug.js";
 const v2_jsdelivr_cjs_url = "https://cdn.jsdelivr.net/npm/vexflow@1.2.93/releases/vexflow-debug.js";
 
+const runButton = document.getElementById("runButton");
+const code = document.getElementById("code");
+const output = document.getElementById("output");
+
+const fileSelect = document.getElementById("fileSelect");
+const fileQueryParamName = "file";
+const files = [
+  { value: "hello", label: "Hello World" },
+  { value: "bass", label: "Bass Clef" },
+  { value: "rests", label: "Rests" },
+  { value: "minuet", label: "Minuet in G" },
+];
+
+const versionSelect = document.getElementById("versionSelect");
+const versionQueryParamName = "ver";
+const versions = [
+  { value: "4", label: "4.2.6" },
+  { value: "3", label: "3.0.9" },
+  { value: "2", label: "1.2.93" },
+];
+
 let v5VexFlowObject;
 let v4VexFlowObject;
 let v3VexFlowObject;
 let v2VexFlowObject;
+let localVexFlowObject;
 
-let fileSelect = document.getElementById("fileSelect");
-let versionSelect = document.getElementById("versionSelect");
-let runButton = document.getElementById("runButton");
-let code = document.getElementById("code");
-let output = document.getElementById("output");
+function populateFileSelect() {
+  files.forEach((file) => fileSelect.add(new Option(file.label, file.value)));
+}
 
-function loadScript(src) {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.onload = resolve;
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
+function populateVersionSelect() {
+  versions.forEach((version) => versionSelect.add(new Option(version.label, version.value)));
+}
+
+function updateDropdown(selectElement, urlParamValue, defaultValue) {
+  let v = urlParamValue ?? defaultValue;
+  if (selectElement.querySelector(`option[value="${v}"]`) == null) {
+    v = defaultValue;
+  }
+  selectElement.value = v;
 }
 
 // Load & validate the file name and version number.
 function loadQueryParams() {
   const urlParams = new URLSearchParams(window.location.search);
-
-  let demo = urlParams.get("demo") ?? "hello";
-  // If the specified demo is not found, set it to the default.
-  if (fileSelect.querySelector(`option[value="${demo}"]`) == null) {
-    demo = "hello";
-  }
-  fileSelect.value = demo;
-
-  const version = urlParams.get("ver") ?? "5";
-  // If the specified version is not found, set it to the default.
-  if (versionSelect.querySelector(`option[value="${version}"]`) == null) {
-    version = "5";
-  }
-  versionSelect.value = version;
-}
-
-function getSelectedFile() {
-  return fileSelect.value;
-}
-
-function getSelectedVersion() {
-  return versionSelect.value;
+  updateDropdown(fileSelect, urlParams.get(fileQueryParamName), files[0].value);
+  updateDropdown(versionSelect, urlParams.get(versionQueryParamName), versions[0].value);
 }
 
 function saveQueryParams() {
   const urlParams = new URLSearchParams(window.location.search);
-  urlParams.set("ver", getSelectedVersion());
-  urlParams.set("demo", getSelectedFile());
+  urlParams.set(versionQueryParamName, versionSelect.value);
+  urlParams.set(fileQueryParamName, fileSelect.value);
   window.history.replaceState({}, "", `?${urlParams.toString()}`);
 }
 
@@ -63,7 +69,7 @@ function updateVexFlowVersion() {
   delete window.Vex;
   delete window.VexFlow;
 
-  switch (getSelectedVersion()) {
+  switch (versionSelect.value) {
     case "5":
     default:
       window.VexFlow = v5VexFlowObject;
@@ -78,44 +84,36 @@ function updateVexFlowVersion() {
     case "1":
       window.Vex = v2VexFlowObject;
       break;
+    case "0": // Select the local development version.
+      window.VexFlow = localVexFlowObject;
+      break;
   }
 }
 
-// Load JS/TS files from /j/examples/*.js
-// All files have the .js extension, even if they are TypeScript files.
+// Load JS/TS files from examples/*.ts
+// All files have a .ts extension, even if they are JavaScript files.
 async function loadAndRunFile() {
-  const examplePath = "j/examples/" + getSelectedFile() + ".v" + getSelectedVersion() + ".js";
+  let fileVersion = versionSelect.value;
+  if (fileVersion === "0") {
+    fileVersion = "5"; // The local development library should use example code for v5.
+  }
 
+  const examplePath = "examples/" + fileSelect.value + ".v" + fileVersion + ".ts";
   const response = await fetch(examplePath);
-  const code = await response.text();
-  showCode(code);
-  enableButton();
-  runCode(); // Automatically run the example code whenever the version changes.
-}
-
-function clearOutput() {
-  output.innerHTML = "";
-}
-
-function enableButton() {
-  runButton.disabled = false;
-}
-
-function showCode(str) {
-  code.innerHTML = str;
+  const codeText = await response.text();
+  code.innerHTML = codeText;
   Prism.highlightElement(code);
+  runButton.disabled = false;
+  runCode();
 }
 
 async function runCode() {
-  clearOutput();
+  output.innerHTML = "";
   let c = code.innerText;
   c = changeTypeScriptImportToJavaScriptImport(c);
   const transpiledCode = ts.transpile(c, { compilerOptions: { target: ts.ScriptTarget.ES2015 } });
   eval(transpiledCode);
 }
-
-// Connect the runButton to the runCode function.
-runButton.addEventListener("click", runCode);
 
 function changeSelectedItem(selectBox, direction) {
   let newIndex = selectBox.selectedIndex + direction;
@@ -129,7 +127,7 @@ function changeSelectedItem(selectBox, direction) {
   selectBox.dispatchEvent(new Event("change"));
 }
 
-document.addEventListener("keydown", (event) => {
+function onKeyDown(event) {
   // CTRL/CMD + Enter => Run Code
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
     event.preventDefault();
@@ -140,23 +138,24 @@ document.addEventListener("keydown", (event) => {
   if (document.activeElement.id !== "code") {
     if (event.key.startsWith("Arrow")) {
       switch (event.key) {
-        // Arrow keys UP/DOWN change the currently selected VERSION.
-        case "ArrowUp":
+        // Arrow keys LEFT/RIGHT change the currently selected VERSION.
+        case "ArrowLeft":
           changeSelectedItem(versionSelect, -1);
           break;
-        case "ArrowDown":
+        case "ArrowRight":
           changeSelectedItem(versionSelect, +1);
           break;
-        // Arrow keys LEFT/RIGHT change the currently selected FILE.
-        case "ArrowLeft":
+        // Arrow keys UP/DOWN change the currently selected FILE.
+        case "ArrowUp":
           changeSelectedItem(fileSelect, -1);
           break;
-        case "ArrowRight":
+        case "ArrowDown":
+        default:
           changeSelectedItem(fileSelect, +1);
           break;
       }
-    } else if (event.key >= "1" && event.key <= "5") {
-      // Number keys 5, 4, 3, 2, 1 select the correct VexFlow version.
+    } else if (event.key >= "0" && event.key <= "5") {
+      // Number keys 5, 4, 3, 2, 1, 0 select the correct VexFlow version.
       if (event.key === "1") {
         versionSelect.value = "2"; // SPECIAL CASE. Alias 1 => 2
       } else {
@@ -165,22 +164,28 @@ document.addEventListener("keydown", (event) => {
       versionSelect.dispatchEvent(new Event("change"));
     }
   }
-});
+}
 
-// When the user chooses a file or version from the dropdowns, we load and run the code.
-fileSelect.addEventListener("change", show);
-versionSelect.addEventListener("change", show);
+function addEventListeners() {
+  document.addEventListener("keydown", onKeyDown);
+  runButton.addEventListener("click", runCode);
+  fileSelect.addEventListener("change", show);
+  versionSelect.addEventListener("change", show);
+}
 
 // Convert TS import statement to JS destructuring assignment.
 // Use a regex to convert from:
 //     import { BarlineType, Factory, Registry, Renderer, StaveNote } from 'vexflow';
 // to:
 //     const { BarlineType, Factory, Registry, Renderer, StaveNote } = VexFlow;
-// The import statement works when building a TypeScript project with VexFlow (via npm install vexflow).
+// The import statement works when:
+//   - building a TypeScript project with VexFlow (via npm install vexflow).
+//   - loading VexFlow as ES modules.
 // The const destructuring statement works in the browser with the VexFlow CJS bundle loaded via <script>.
 function changeTypeScriptImportToJavaScriptImport(code) {
   const regex = /import\s*{(.*?)}\s*from\s*['"]vexflow['"];/g;
-  const VFLibraryName = getSelectedVersion() === "5" ? "VexFlow" : "Vex.Flow";
+  const isV5OrNewer = versionSelect.value === "5" || versionSelect.value === "0";
+  const VFLibraryName = isV5OrNewer ? "VexFlow" : "Vex.Flow";
   const replacement = `const {$1} = ${VFLibraryName};`;
   return code.replace(regex, replacement);
 }
@@ -191,10 +196,38 @@ function show() {
   saveQueryParams();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// Load VexFlow libraries.
+// We load multiple versions so we can quickly compare them.
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+async function addLocalLibraryIfItExists() {
+  if (!local_cjs_url) {
+    return;
+  }
+  await loadScript(local_cjs_url);
+  localVexFlowObject = window.VexFlow;
+
+  const gitShortHash = localVexFlowObject.BUILD.ID.substr(0, 7);
+
+  // Set the value to "0" so we can use the 0 number key to select it.
+  versions.unshift({ value: "0", label: `local (${gitShortHash})` });
+}
+
 async function loadVexFlowScriptsInOrder() {
   try {
     await loadScript(v5_jsdelivr_cjs_url);
     v5VexFlowObject = window.VexFlow;
+    versions.unshift({ value: "5", label: v5VexFlowObject.BUILD.VERSION });
 
     await loadScript(v4_jsdelivr_cjs_url);
     v4VexFlowObject = window.Vex;
@@ -205,6 +238,11 @@ async function loadVexFlowScriptsInOrder() {
     await loadScript(v2_jsdelivr_cjs_url);
     v2VexFlowObject = window.Vex;
 
+    await addLocalLibraryIfItExists();
+
+    populateFileSelect();
+    populateVersionSelect();
+
     // Once all the scripts are loaded, we can check this page's query params.
     loadQueryParams();
 
@@ -214,4 +252,5 @@ async function loadVexFlowScriptsInOrder() {
   }
 }
 
+addEventListeners();
 loadVexFlowScriptsInOrder();
