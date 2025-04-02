@@ -1,8 +1,8 @@
 // This sandbox cannot be viewed from a file:// URL. Use `npm start` instead.
-
+//
 // To load your local copy of vexflow-debug.js:
-//   - start a web server from the vexflow/ directory: npx http-server
-//   - open vexflow/tests/sandbox.html
+//   - start a web server from the vexflow/ directory: `npx http-server`
+//   - open http://localhost:8080/tests/sandbox.html
 let local_cjs_url = "/build/cjs/vexflow-debug.js?random=" + Math.random();
 
 // The other vexflow releases will be loaded from CDN.
@@ -229,7 +229,21 @@ async function addLocalLibraryIfItExists() {
         return;
     }
 
-    local_cjs_url = urlParams.get("parent") + local_cjs_url;
+    const parentOrigin = urlParams.get("parent");
+    local_cjs_url = parentOrigin + local_cjs_url;
+    if (parentOrigin === "file://") {
+        const msg = `Can't load JS file from:
+  ${local_cjs_url}
+
+To load your local copy of vexflow-debug.js:
+  - start a web server from the vexflow/ directory:
+    npx http-server
+  - open http://localhost:8080/tests/sandbox.html`;
+        console.error(msg);
+        const msgElement = document.getElementById("message");
+        msgElement.innerHTML = msg;
+        msgElement.style.display = "block";
+    }
 
     await loadScript(local_cjs_url);
     localVexFlowObject = window.VexFlow;
