@@ -27,10 +27,17 @@
         justify-content: center;
       }
     </style>
+    <script>
+      const msg = "Hello, world! The sum of a and b is:";
+      const a = 1;
+      const b = 2;
+      console.log(msg, a + b);
+    </script>
   </head>
   <body>
     <div class="title">Hello!</div>
     <p>This is a test of the 11ty static site generator.</p>
+    <!-- THIS COMMENT IS REMOVED BY THE html-minifier TRANSFORM in .eleventy.js -->
     {% include 'footer.html' %}
   </body>
 </html>
